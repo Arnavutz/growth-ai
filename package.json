@@ -1,0 +1,45 @@
+{
+  "name": "growth-ai",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "worker": "node --env-file-if-exists=.env.local --import tsx scripts/worker.ts",
+    "db:migrate": "node --env-file-if-exists=.env.local --import tsx scripts/migrate.ts",
+    "check": "npm run typecheck && npm test && npm run build",
+    "smoke": "tsx scripts/smoke.ts",
+    "setup:local": "tsx scripts/setup-local.ts",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "test:browser": "tsx scripts/browser.ts"
+  },
+  "dependencies": {
+    "@openai/agents": "^0.21.0",
+    "@supabase/supabase-js": "^2.118.0",
+    "next": "^16.4.2",
+    "pg": "^8.23.1",
+    "posthog-node": "^5.57.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "playwright-core": "^1.64.1",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vercel": "^65.2.0"
+  }
+}

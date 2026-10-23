@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS settings (id TEXT PRIMARY KEY, value TEXT NOT NULL);
+INSERT INTO settings (id,value) VALUES ('kill_switch','0') ON CONFLICT(id) DO NOTHING;
+CREATE TABLE IF NOT EXISTS policies (agent TEXT PRIMARY KEY, enabled INTEGER NOT NULL DEFAULT 1, daily_budget_cents INTEGER NOT NULL DEFAULT 0 CHECK(daily_budget_cents >= 0), allowed_actions TEXT NOT NULL DEFAULT '["analyze","propose"]');
+CREATE TABLE IF NOT EXISTS jobs (id TEXT PRIMARY KEY, agent TEXT NOT NULL REFERENCES policies(agent), status TEXT NOT NULL DEFAULT 'pending', due_at TEXT NOT NULL, attempts INTEGER NOT NULL DEFAULT 0, lease_until TEXT, completed_at TEXT, last_error TEXT);
+CREATE INDEX IF NOT EXISTS jobs_due ON jobs(status,due_at);
+CREATE TABLE IF NOT EXISTS decisions (id TEXT PRIMARY KEY, job_id TEXT NOT NULL UNIQUE REFERENCES jobs(id), agent TEXT NOT NULL, created_at TEXT NOT NULL, source TEXT NOT NULL, payload TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS audit (id TEXT PRIMARY KEY, created_at TEXT NOT NULL, actor TEXT NOT NULL, action TEXT NOT NULL, payload TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS drafts (id TEXT PRIMARY KEY, kind TEXT NOT NULL CHECK(kind IN ('experiment','content')), status TEXT NOT NULL DEFAULT 'pending', created_at TEXT NOT NULL, payload TEXT NOT NULL, reviewed_at TEXT);
+CREATE TABLE IF NOT EXISTS events (id TEXT PRIMARY KEY, occurred_at TEXT NOT NULL, kind TEXT NOT NULL, amount_cents INTEGER NOT NULL DEFAULT 0, currency TEXT NOT NULL, channel TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS login_attempts (id TEXT PRIMARY KEY, failures INTEGER NOT NULL, expires_at TEXT NOT NULL);
