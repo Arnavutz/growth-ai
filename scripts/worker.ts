@@ -13,6 +13,7 @@ do {
   try {
     await schedule();
     const result = await tick();
+    if (once && result.status === "failed") process.exitCode = 1;
     console.log(JSON.stringify({ time: new Date().toISOString(), ...result }));
   } catch {
     console.error(

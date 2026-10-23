@@ -1,0 +1,12 @@
+# Blueprint: provision only after reviewing provider costs and binding DATABASE_URL.
+services:
+  - type: worker
+    name: growth-ai-worker-staging
+    runtime: docker
+    dockerfilePath: ./Dockerfile.worker
+    autoDeployTrigger: off
+    envVars:
+      - key: GROWTH_MODE
+        value: simulation
+      - key: DATABASE_URL
+        sync: false
